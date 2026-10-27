@@ -1,0 +1,6 @@
+﻿file,role,expected,decision,correct,orange_ratio,margin,largest_area_ratio,valid_count
+ng_01.jpg,calibration,NG,NG,True,0.0012,-0.2147,0.0,0
+ng_02.jpg,test,NG,NG,True,0.0007,-0.2152,0.0,0
+ok_01.jpg,calibration,OK,OK,True,0.4306,0.2147,0.4266,1
+ok_02.jpg,test,OK,OK,True,0.4298,0.2139,0.4253,1
+ok_03.jpg,test,OK,OK,True,0.4374,0.2215,0.4334,1
