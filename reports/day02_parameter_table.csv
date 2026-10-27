@@ -1,0 +1,40 @@
+﻿image,problem,method,parameter,improved,worse,next_inspection_helpful
+dark.jpg,dark,Brightness,beta=0,기준 (평균 밝기 49),전체가 어두워 병뚜껑 홈이 잘 안 보임,no
+dark.jpg,dark,Brightness,beta=20,평균 밝기 69로 형태가 조금 더 보임,Otsu 결과는 beta=0과 동일 (IoU 0.998),partly
+dark.jpg,dark,Brightness,beta=50,평균 밝기 99로 눈으로 확인하기 쉬움,Otsu 결과는 beta=0과 동일 (임계값만 61→111),partly
+dark.jpg,dark,Brightness,beta=80,평균 밝기 129로 가장 잘 보임,Otsu 결과 동일 / 밝은 영역 세부가 줄기 시작,partly
+dark.jpg,dark,Gamma,gamma=0.6,없음,더 어두워짐 (평균 22) / IoU 0.974,no
+dark.jpg,dark,Gamma,gamma=0.8,없음,더 어두워짐 (평균 35) / IoU 0.990,no
+dark.jpg,dark,Gamma,gamma=1.0,기준 (원본과 동일),변화 없음,no
+dark.jpg,dark,Gamma,gamma=1.2,어두운 영역이 밝아짐 (평균 61) / 대비 39.6→42.8,IoU 0.998→0.989 소폭 감소,partly
+dark.jpg,dark,Gamma,gamma=1.5,어두운 영역이 충분히 밝아짐 (평균 78) / 대비 44.8,IoU 0.981로 감소,partly
+dark.jpg,dark,Gamma,gamma=2.0,가장 밝음 (평균 102),IoU 0.969로 가장 낮음 / 밝은 쪽 압축,no
+low_contrast.jpg,low contrast,CLAHE,none,기준 (표준편차 25.2 / IoU 0.997 / 조각 5),대비가 약해 뿌옇게 보임,yes
+low_contrast.jpg,low contrast,CLAHE,clip=1.0 tile=8x8,표준편차 27.7로 약간 선명,IoU 0.984 / 조각 6,partly
+low_contrast.jpg,low contrast,CLAHE,clip=2.0 tile=8x8,표준편차 34.1로 눈에 띄게 선명,IoU 0.978 / 조각 15 (배경 Texture 강조),partly
+low_contrast.jpg,low contrast,CLAHE,clip=3.0 tile=8x8,표준편차 38.6,IoU 0.975 / 조각 15,no
+low_contrast.jpg,low contrast,CLAHE,clip=4.0 tile=8x8,표준편차 41.2로 가장 선명해 보임,IoU 0.958 / 조각 14 / Noise·Texture 과다,no
+noise.jpg,noise,Filter,none,기준 (PSNR 22.5 / 조각 75),점 Noise가 많아 Otsu 결과에 작은 조각 다수,no
+noise.jpg,noise,Gaussian Blur,kernel=3x3,PSNR 28.9 / 조각 75→6,경계가 약간 흐려짐,yes
+noise.jpg,noise,Gaussian Blur,kernel=7x7,조각 6,PSNR 27.3 / 경계가 많이 흐려짐 (IoU 0.975),partly
+noise.jpg,noise,Median Blur,kernel=3,PSNR 30.8로 가장 높음 / IoU 0.989 / 조각 7,거의 없음,yes
+noise.jpg,noise,Median Blur,kernel=7,조각 8,PSNR 26.5 / 작은 형태 손실 (IoU 0.968),no
+noise.jpg,noise,Bilateral Filter,d=9 sigma=75/75,경계가 비교적 유지됨,점 Noise가 남음 (조각 23) / 처리시간 증가,partly
+blur.jpg,blur,Sharpening,3x3 kernel (0 -1 0 / -1 5 -1 / 0 -1 0),선명도 24→153 / PSNR 27.9→30.6 / IoU 0.975→0.986,기준 이미지 선명도(510)에는 못 미침 / Noise 강조 가능,yes
+low_contrast.jpg,low contrast,Threshold,fixed=80,없음,흰색 0% (이미지 최솟값이 80이라 전부 배경),no
+low_contrast.jpg,low contrast,Threshold,fixed=120,흰색 65.4% / IoU 0.994,값을 사람이 정해야 함,partly
+low_contrast.jpg,low contrast,Threshold,fixed=160,없음,흰색 100% (최댓값 162라 전부 객체) / IoU 0.650,no
+low_contrast.jpg,low contrast,Otsu,auto (=118),IoU 0.997로 가장 높음 / 값 자동 결정,없음,yes
+low_contrast.jpg,low contrast,Original + Otsu,none,IoU 0.997 / 조각 5,없음,yes
+low_contrast.jpg,low contrast,Gaussian + Otsu,kernel=5x5,경계가 단순해짐,IoU 0.984로 소폭 감소,partly
+low_contrast.jpg,low contrast,CLAHE + Otsu,clip=2.0 tile=8x8,일부 경계 강조,IoU 0.978 / 조각 15 (불필요한 영역 증가),no
+challenge.jpg,cap and background similar brightness,Brightness,beta=0/50/80,없음,Otsu 결과 원본과 완전히 동일 (임계값만 111→161→191),no
+challenge.jpg,cap and background similar brightness,Contrast,alpha=1.5/2.0,표준편차 19→28.5→37.1,분리 개선 없음 (흰색 비율 82.5%로 동일),no
+challenge.jpg,cap and background similar brightness,Gamma,gamma=1.5,없음,대비 19→17로 감소,no
+challenge.jpg,cap and background similar brightness,CLAHE,clip=2.0 tile=8x8,병뚜껑 윗면이 처음으로 배경과 갈림,조각 584→2929 / 벽 Texture 강조,no
+challenge.jpg,cap and background similar brightness,Sharpening,3x3 kernel,선명도 21→503,조각 584→2824 (Noise 강조),no
+challenge.jpg,cap and background similar brightness,Blur + Unsharp,blur=5x5 amount=0.8,조각 584→242로 가장 깔끔,분리 자체는 개선 없음,partly
+challenge.jpg,cap and background similar brightness,HSV S channel,blur=21x21 S>9,배경 제거 (병뚜껑 S 17 / 배경 S 5),유리병 일부가 함께 남음 (S 8),yes
+challenge.jpg,cap and background similar brightness,S AND Gray,S>9 AND Gray>118,배경과 유리병이 모두 빠지고 병뚜껑만 남음,그림자 진 왼쪽이 빠짐 / S 기준 8이면 배경 섞임,yes
+challenge.jpg,cap and background similar brightness,GrabCut,pad=120 iter=10,윗면 왼쪽 채움 (면적 35.4%→44.9%),4일차 범위 기술,yes
+challenge.jpg,cap and background similar brightness,Mirror + Convex Hull,center_x=461,링 왼쪽 끝 채움 / 윗면·링 분리,링의 36%가 추정 / 틈 사이 유리까지 포함,partly

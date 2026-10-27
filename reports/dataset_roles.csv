@@ -1,0 +1,6 @@
+﻿folder,role,when_used,used_in_rule_vision,bottle_cap_example,caution
+calibration,검사 기준을 정하기 위한 데이터,정상 범위와 Threshold 등 기준값을 결정할 때,사용,cap_on_reference.jpg / cap_off_reference.jpg로 면적·밝기 기준 정하기,기준을 정한 뒤에는 이 데이터로 성능을 평가하지 않는다
+train,AI 모델을 학습하기 위한 데이터,AI 모델을 사용하는 경우,사용 안 함 (7일차 이후 AI 단계에서 사용),정상 병뚜껑 이미지 여러 장으로 모델 학습,Rule 기반 검사에서는 calibration이 이 역할을 대신한다
+validation,학습·설정 중간 비교용 데이터,AI 모델이나 여러 설정을 비교할 때,선택 사용,Threshold 후보 2~3개 중 어느 것이 나은지 비교,여기서 고른 설정도 최종 확인은 test에서 한다
+test,확정된 방법의 최종 확인 데이터,기준을 모두 정한 뒤 성능을 확인할 때,사용,처음 보는 병뚜껑 사진에 확정된 Rule 적용,기준 결정에 절대 사용하지 않는다 (사용하면 성능이 실제보다 좋게 나온다)
+challenge,일부러 어려운 조건의 데이터,어떤 조건에서 실패하는지 찾아볼 때,사용,challenge.jpg (배경과 밝기가 비슷함) / glare.jpg (강한 반사),성능 점수가 아니라 실패 원인과 한계를 찾는 용도
