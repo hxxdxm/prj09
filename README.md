@@ -121,7 +121,7 @@ ROI 설정
 | `14_sharpen.py` | 경계 강조 |
 | `15_threshold_otsu.py` | 고정 Threshold와 Otsu 비교 |
 | `16_preprocess_compare.py` | 전처리 전·후 종합 비교 |
-| `challenge.py` | Mini Challenge: 흰 병뚜껑 분리 |
+| `17_day02_challenge.py` | Mini Challenge: 흰 병뚜껑 분리 |
 
 ### Mini Challenge — 배경과 밝기가 비슷한 흰 병뚜껑 분리
 
