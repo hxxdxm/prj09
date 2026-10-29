@@ -320,9 +320,10 @@ Template Matching, SIFT, RANSAC, Homography
 ### Test
 
 - Test 이미지: 6장
-- Accuracy: (직접 기록)
-- TP: / TN: / FP: / FN: (직접 기록)
-- Test 결과를 보고 Threshold를 다시 맞추지 않고 현재 Baseline의 한계로 기록했다.
+- Accuracy: 0.5000
+- TP: 3 / TN: 0 / FP: 3 / FN: 0
+- NG Precision: 0.5000 / NG Recall: 1.0000
+- FP 3건: 정상 이미지를 모두 NG로 판정 (Baseline Rule이 정상 Test 이미지에 너무 엄격함)
 
 ### Mini Challenge — LOTTE 드림카카오 72% 라벨
 

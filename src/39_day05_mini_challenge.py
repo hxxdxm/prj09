@@ -191,7 +191,7 @@ print()
 # Calibration 측정값 사이의 가운데 값들로 만든다.
 # 고르는 순서:
 #   1) 오류(FP+FN)가 가장 적은 것
-#   2) FP(불량을 OK로 통과)가 적은 것  → 검사에서는 불량 통과가 더 위험
+#   2) FN(불량을 OK로 통과)이 적은 것  → 검사에서는 불량 통과가 더 위험
 #   3) 실제로 쓰는 조건이 적은 것      → Calibration이 적을수록
 #                                         조건이 많으면 데이터에만 맞춰지기 쉽다
 #   4) 기준값과 가장 가까운 Calibration 값까지의 여유(margin)가 큰 것
@@ -212,10 +212,11 @@ def evaluate(thresholds):
     fp = fn = 0
     for r in calibration:
         decision, _ = apply_rule(r, rule)
-        if r["actual"] == "NG" and decision == "OK":
-            fp += 1
+        # 5일차 기준: Positive = NG
         if r["actual"] == "OK" and decision == "NG":
-            fn += 1
+            fp += 1          # 정상을 불량으로 잘못 판정
+        if r["actual"] == "NG" and decision == "OK":
+            fn += 1          # 불량을 정상으로 통과 (놓침)
     # margin: 각 Feature 범위로 나눈 "기준과 가장 가까운 값까지의 거리"의 최솟값
     margins = []
     for feature, t in thresholds.items():
@@ -234,7 +235,7 @@ for combo in product(*(candidate_thresholds(f) for f in RULE_FEATURES)):
     results.append({"errors": fp + fn, "fp": fp, "fn": fn, "margin": margin,
                     "conditions": len(thresholds), "thresholds": thresholds})
 
-results.sort(key=lambda x: (x["errors"], x["fp"], x["conditions"], -x["margin"]))
+results.sort(key=lambda x: (x["errors"], x["fn"], x["conditions"], -x["margin"]))
 best = results[0]
 
 print("=" * 60)
@@ -304,10 +305,11 @@ for r in test_rows:
     decision, reason = apply_rule(r, frozen_rule)
     r["predicted"] = decision
     r["reason"] = reason
-    if r["actual"] == "OK":
-        r["result"] = "TP" if decision == "OK" else "FN"
+    # 5일차 기준: Positive = NG (불량을 잡아내는 것이 목적)
+    if r["actual"] == "NG":
+        r["result"] = "TP" if decision == "NG" else "FN"
     else:
-        r["result"] = "TN" if decision == "NG" else "FP"
+        r["result"] = "TN" if decision == "OK" else "FP"
     save_preview(r, decision, reason, OUTPUT_DIR)
     print(f"{r['file']:16} actual={r['actual']}  predicted={decision}  {r['result']}  "
           f"sift={r['sift_good_matches']}  ratio={r['inlier_ratio']:.3f}  {reason}")
@@ -319,9 +321,9 @@ print()
 # --------------------------------------------------
 # ⑦ TP / TN / FP / FN  (TODO 7)
 #
-# 이 Mini Challenge에서는 "정상(OK)을 OK로 맞힌 것"을 TP로 둔다.
-#   TP : 실제 OK → OK      FN : 실제 OK → NG (정상을 불량으로)
-#   TN : 실제 NG → NG      FP : 실제 NG → OK (불량을 통과시킴)
+# 5일차 본 실습(38_day05_evaluate.py)과 같이 Positive Class = NG
+#   TP : 실제 NG → NG (불량을 잡음)      FN : 실제 NG → OK (불량을 놓침)
+#   TN : 실제 OK → OK                    FP : 실제 OK → NG (정상을 불량으로)
 # --------------------------------------------------
 
 counts = {key: sum(r["result"] == key for r in test_rows) for key in ("TP", "TN", "FP", "FN")}
@@ -334,6 +336,10 @@ print("=" * 60)
 print(f"Test 이미지 : {total}장")
 print(f"TP={counts['TP']}  TN={counts['TN']}  FP={counts['FP']}  FN={counts['FN']}")
 print(f"Accuracy    : {accuracy:.3f}")
+ng_precision = counts["TP"] / (counts["TP"] + counts["FP"]) if counts["TP"] + counts["FP"] else 0.0
+ng_recall = counts["TP"] / (counts["TP"] + counts["FN"]) if counts["TP"] + counts["FN"] else 0.0
+print(f"NG Precision: {ng_precision:.3f}   (NG라고 한 것 중 실제 NG 비율)")
+print(f"NG Recall   : {ng_recall:.3f}   (실제 NG 중 잡아낸 비율)")
 
 wrong = [r for r in test_rows if r["result"] in ("FP", "FN")]
 if wrong:

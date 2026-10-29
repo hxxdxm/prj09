@@ -49,12 +49,12 @@ Inlier Ratio >= 0.6543
 Calibration 결과: FP 0, FN 1 (ok_03), margin 0.003
 
 ## Test 결과
-- Test 이미지: 4장
-- TP: 2
-- TN: 1
-- FP: 1
-- FN: 0
+- TP: 1   (오른쪽을 가린 NG를 NG로 잡음)
+- TN: 2   (정상 2장을 OK로)
+- FP: 0
+- FN: 1   (아래쪽을 가린 NG를 OK로 통과시킴)
 - Accuracy: 0.75
+- NG Recall: 0.5 (실제 NG 2장 중 1장만 잡음)
 
 ## 가장 눈에 띄는 결과
 파일: test_ng_02.jpg
