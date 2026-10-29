@@ -186,3 +186,171 @@ Morphology와 Contour를 적용하여
 Rule 기반 OK / NG 판정으로 연결한다.
 
 ---
+
+## Day 03 — Morphology·Contour와 규칙 기반 판정
+
+1일차에서 실제 촬영한 ROI 이미지와
+2일차에서 학습한 Threshold / Otsu 방식을 이어서 사용하였다.
+Binary Image를 Morphology로 정리하고,
+Contour로 객체의 특징을 숫자로 측정한 뒤
+실제 측정값을 근거로 Rule 기반 OK / NG 판정을 만들었다.
+
+### 실습 흐름
+
+```text
+ROI Image → Gray → Otsu → Binary → Morphology → Contour
+→ Feature 측정 → cap_on / cap_off 비교 → Candidate Rule → OK / NG
+→ 새 촬영 이미지 Batch Test → 결과 분석 → Mini Challenge
+```
+
+### 주요 실습
+
+- Opening / Closing 역할 확인, Kernel 3×3 · 5×5 · 9×9 비교
+- Area Ratio / Count / BBox / Center 측정 (`cap_on` 0.661 vs `cap_off` 0.459)
+- 두 값의 가운데로 Candidate Threshold (0.560) 생성
+- 640×480으로 새로 찍은 6장으로 Batch Test (기준 0.361) → 4/4 일치
+
+### 분석 결과
+
+- 4/4 일치였지만 `cap_off_003`은 기준과 0.044 차이로 아슬아슬했다.
+- 면적 비율은 ROI 크기에 따라 달라진다. (`cap_off_003`은 ROI가 가장 작아 비율이 커짐)
+- 2일차 기준 이미지로 만든 기준값 0.560을 Batch 이미지에 적용하면 뚜껑 있는 3장 중 2장이 틀린다.
+  → 기준값은 촬영 조건에 묶여 있으며, 조건이 바뀌면 다시 Calibration해야 한다.
+- 덩어리 개수는 촬영 조건에 따라 대소 관계가 뒤집혀 단독 Feature로 쓰기 어렵다.
+
+### Mini Challenge — 주황색 병뚜껑 존재 검사
+
+| 항목 | 내용 |
+|---|---|
+| 처리 | ROI → HSV → 주황색 Mask → Morphology → Contour |
+| Feature | `orange_ratio` (ROI 안 주황색 비율) |
+| 측정값 | 정상 0.430 ~ 0.437 / 불량 0.0007 ~ 0.0012 |
+| Rule | `orange_ratio >= 0.2159` → OK |
+| Test | 3장 모두 일치, 가장 작은 Margin 0.214 |
+
+색상이 뚜렷한 물체는 Gray 면적보다 HSV 색상 Mask가 훨씬 안정적이었다. (Margin 약 5배)
+
+### 확장 실습
+
+검사 로직을 `src/cap_inspector.py`로 분리하고,
+스마트폰 IP Webcam 실시간 영상을 FastAPI 웹 화면에서 검사하도록 연결했다.
+(`src/fastapi_cap_app.py`, `web/cap_inspection.html`, `tests/test_inspector.py`)
+
+### 주요 결과 파일
+
+- reports/day03_reference_features.csv
+- reports/day03_inspection_results.csv
+- reports/day03_challenge_results.csv
+- reports/day03_rule_analysis.md
+
+---
+
+## Day 04 — Template · Feature Matching
+
+### 학습 내용
+
+광천김 포장지의 로고 영역을 기준으로 다음 방법을 실습했다.
+
+- GrabCut, MeanShift
+- Template Matching
+- ORB, SIFT
+- RANSAC, Homography
+
+### 비교 데이터
+
+normal / shift / rot15 / scale90 (full_front.jpg를 코드로 변형)
+
+### 주요 결과
+
+| 방법 | 결과 |
+|---|---|
+| Template Matching | 기준 상태에서는 잘 찾았지만 회전·크기 변화에서 Score 감소 |
+| ORB | 위치·회전·크기 변화에서도 Matching이 어느 정도 유지 |
+| SIFT | 회전·크기 변화에서도 많은 Matching 유지 |
+| SIFT + Homography | 특징점 위치 관계로 로고 위치를 사각형으로 찾음 |
+
+### Mini Challenge — 실제 다시 촬영한 이미지
+
+선택한 방법: **SIFT + Homography**
+
+| 이미지 | Good Match | Inlier | Inlier Ratio | 결과 |
+|---|---:|---:|---:|---|
+| shift | 347 | 305 | 0.879 | FOUND |
+| rotate | 389 | 360 | 0.925 | FOUND |
+| distance | 365 | 343 | 0.940 | FOUND |
+| tilt_glare | 294 | 212 | 0.721 | FOUND (반사로 가장 불안정) |
+
+- 같은 이미지에서 Template Matching은 로고 크기가 달라 3장 모두 엉뚱한 위치를 가리켰고,
+  distance.jpg는 Template보다 작아 실행할 수 없었다.
+- ORB는 tilt_glare에서 Good Match가 27개로 크게 줄었다.
+- tilt_glare의 Homography 사각형은 사다리꼴로 그려져 포장지 기울기(원근)를 반영했다.
+
+### 주요 결과 파일
+
+- reports/day04_template_results.csv
+- reports/day04_orb_results.csv
+- reports/day04_sift_results.csv
+- reports/day04_homography_results.csv
+- reports/day04_challenge_results.csv
+- reports/day04_method_selection.md
+
+---
+
+## Day 05 — Calibration · Rule Freeze · Test
+
+### 검사 대상
+
+광천김 포장지의 기준 로고 존재 및 정합 검사
+
+### 사용한 기술
+
+Template Matching, SIFT, RANSAC, Homography
+
+### Calibration
+
+- OK 6장 / NG 6장
+- 측정값: Template Score, SIFT Good Match, Homography Inlier, Inlier Ratio
+
+### Baseline Rule
+
+- Homography Found: True
+- SIFT Good Match >= 129
+- Inlier Ratio >= 0.8664
+
+### Test
+
+- Test 이미지: 6장
+- Accuracy: (직접 기록)
+- TP: / TN: / FP: / FN: (직접 기록)
+- Test 결과를 보고 Threshold를 다시 맞추지 않고 현재 Baseline의 한계로 기록했다.
+
+### Mini Challenge — LOTTE 드림카카오 72% 라벨
+
+| 항목 | 내용 |
+|---|---|
+| Calibration | OK 3장 / NG 3장 |
+| Feature 비교 | 네 Feature 모두 OK·NG 범위가 겹침 (gap 음수) |
+| Rule | Homography 성공 AND Inlier Ratio >= 0.6543 |
+| Test | TP 2 / TN 1 / FP 1 / FN 0 (Accuracy 0.75) |
+
+- FP: 라벨 아래쪽을 가린 NG가 OK로 통과 (SIFT 83, Inlier Ratio 0.687).
+  위쪽 글자만으로 특징점이 충분해 Homography가 로고 전체 위치를 추정했다.
+- 특징점 개수·비율은 로고 일부만 가린 불량을 표현하기 어렵다.
+- Calibration의 `ok_03`은 멀리서 위에서 내려다보며 찍어 정상인데도 점수가 낮았다.
+  → 촬영 거리·각도를 고정해야 한다.
+
+### 핵심 결과 파일
+
+- reports/day05_calibration_measurements.csv
+- reports/day05_rule_candidates.csv
+- configs/day05_logo_rules.json
+- reports/day05_test_results.csv
+- reports/day05_test_metrics.md
+- reports/day05_mini_challenge.md
+
+### 오늘의 핵심
+
+Calibration 데이터로 판정 기준을 정하고, 기준을 동결한 뒤 처음 보는 Test 데이터에 적용했다.
+Accuracy뿐 아니라 FP와 FN을 확인하고, 틀린 결과의 원인을 기록했다.
+
+---

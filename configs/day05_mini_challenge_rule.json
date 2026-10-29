@@ -1,0 +1,21 @@
+{
+  "product": "mini_challenge",
+  "require_homography": true,
+  "thresholds": {
+    "inlier_ratio": 0.6543
+  },
+  "calibration": {
+    "ok_images": 3,
+    "ng_images": 3,
+    "errors": 1,
+    "fp": 0,
+    "fn": 1,
+    "margin": 0.0026
+  },
+  "feature_gap": {
+    "template_score": -0.0896,
+    "sift_good_matches": -23,
+    "homography_inliers": -24,
+    "inlier_ratio": -0.0889
+  }
+}
