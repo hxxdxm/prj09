@@ -1,0 +1,5 @@
+﻿condition,file,method,target_size,score,target_kp,good_matches,inliers,inlier_ratio,status,note,time_ms
+shift,shift.jpg,SIFT_HOMOGRAPHY,1346x584,,850,347,305,0.879,FOUND,,73.0
+rotate,rotate.jpg,SIFT_HOMOGRAPHY,861x417,,920,389,360,0.925,FOUND,,23.3
+distance,distance.jpg,SIFT_HOMOGRAPHY,387x157,,556,365,343,0.94,FOUND,,8.6
+tilt_glare,tilt_glare.jpg,SIFT_HOMOGRAPHY,1656x777,,1956,294,212,0.721,FOUND,,95.7

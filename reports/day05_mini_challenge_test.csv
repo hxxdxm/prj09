@@ -1,0 +1,5 @@
+﻿file,actual,predicted,result,reason,template_score,sift_good_matches,homography_inliers,inlier_ratio,homography_found
+test_ok_01.jpg,OK,OK,TP,,0.4255,132,101,0.7652,1
+test_ok_02.jpg,OK,OK,TP,,0.334,129,92,0.7132,1
+test_ng_01.jpg,NG,NG,TN,NG_LOW_INLIER_RATIO,0.3371,67,29,0.4328,1
+test_ng_02.jpg,NG,OK,FP,,0.3501,83,57,0.6867,1
