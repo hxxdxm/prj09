@@ -8,8 +8,8 @@
     "ok_images": 3,
     "ng_images": 3,
     "errors": 1,
-    "fp": 0,
-    "fn": 1,
+    "fp": 1,
+    "fn": 0,
     "margin": 0.0026
   },
   "feature_gap": {
