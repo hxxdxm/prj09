@@ -1,0 +1,6 @@
+﻿condition,deskew,expected_sn,raw_text,final_text,format_ok,expected_match,ocr_exact,status,reasons
+low_contrast,no,0637145699424,'0637145699424\n\x0c',0637145699424,True,True,True,OK,
+blur,no,0637145699424,'\x0c',,False,False,False,NG,NG_OCR_EMPTY|NG_FORMAT|NG_EXPECTED_MISMATCH
+tilt,no,0637145699424,'2\n\x0c',2,False,False,False,NG,NG_FORMAT|NG_EXPECTED_MISMATCH
+tilt,yes,0637145699424,'4\n\x0c',4,False,False,False,NG,NG_FORMAT|NG_EXPECTED_MISMATCH
+glare,no,0637145699424,'\x0c',,False,False,False,NG,NG_OCR_EMPTY|NG_FORMAT|NG_EXPECTED_MISMATCH

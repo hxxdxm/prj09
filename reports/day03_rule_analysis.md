@@ -1,4 +1,4 @@
-# Day 03 Mini Challenge 결과
+gi t# Day 03 Mini Challenge 결과
 
 ## 1. 검사 문제
 검사 대상: 영양제 병의 주황색 병뚜껑
