@@ -1,0 +1,5 @@
+﻿file,expected_text,ocr_text,format_ok,strict_format_ok,exact_match,gray_text,clahe_text
+0185973818825_side.png,NA679903-8A,NA679903-8A,True,True,True,,
+0386316000696_side.png,TI776224-2D,TI776224-20,True,False,False,TI776224-20,T1776224-20
+0635619134582_side.png,KW156489-8R,KW156489-8R,True,True,True,,
+0924467469402_side.png,ER935556-3V,ER935556-3V,True,True,True,,

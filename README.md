@@ -400,7 +400,8 @@ PSM, Whitelist, Text Cleaning, Regex, Expected SN 비교, Deskew
 ### Mini Challenge
 
 검사 대상: Ch.-B.
-결과: (실습 후 작성)
+OCR 성공 3 / 4. 흐린 이미지에서 D를 0으로 읽은 1장이 실패했다.
+교재 Regex는 이 오류를 통과시켰지만, 실제 모양에 맞춘 엄격한 Regex는 잡아냈다.
 
 ### 주요 결과 파일
 
@@ -410,6 +411,8 @@ PSM, Whitelist, Text Cleaning, Regex, Expected SN 비교, Deskew
 - reports/day06_ocr_metrics.md
 - reports/day06_challenge_results.csv
 - reports/day06_failure_analysis.md
+- reports/day06_mini_challenge_results.csv
+- reports/day06_mini_challenge.md
 
 ### 오늘 확인한 핵심
 
