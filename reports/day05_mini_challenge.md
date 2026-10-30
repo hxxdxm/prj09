@@ -32,7 +32,7 @@ ok_03은 SIFT 101, Inlier Ratio 0.564로 정상인데도 낮았다.
 ok_03은 다른 OK 사진보다 멀리서, 위에서 내려다보는 각도로 찍어
 라벨이 작고 비스듬하게 나왔다.
 그래서 정상인데도 SIFT 101, Inlier Ratio 0.564로 가장 낮았고,
-Calibration에서 유일하게 NG로 잘못 판정되었다(FN).
+Calibration에서 유일하게 NG로 잘못 판정되었다(FP).
 
 ### NG
 ng_02(SIFT 44, Ratio 0.364)는 낮았지만,
@@ -46,7 +46,7 @@ Homography 계산 성공
 AND
 Inlier Ratio >= 0.6543
 
-Calibration 결과: FP 0, FN 1 (ok_03), margin 0.003
+Calibration 결과: FP 1 (ok_03), FN 0, margin 0.003
 
 ## Test 결과
 - TP: 1   (오른쪽을 가린 NG를 NG로 잡음)

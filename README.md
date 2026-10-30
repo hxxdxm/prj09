@@ -355,3 +355,67 @@ Calibration 데이터로 판정 기준을 정하고, 기준을 동결한 뒤 처
 Accuracy뿐 아니라 FP와 FN을 확인하고, 틀린 결과의 원인을 기록했다.
 
 ---
+
+## Day 06 — OCR 기반 제조 문자 검사
+
+### 검사 대상
+
+제품에 인쇄된 13자리 SN
+(Mini Challenge: Ch.-B. 제품 코드)
+
+### 사용 기술
+
+OpenCV ROI, Gray / CLAHE / Otsu 비교, Tesseract OCR, pytesseract,
+PSM, Whitelist, Text Cleaning, Regex, Expected SN 비교, Deskew
+
+### 최종 OCR Rule
+
+| 항목 | 값 |
+|---|---|
+| Version | day06-ocr-v1.0 |
+| Preprocess | original |
+| PSM | 7 |
+| Whitelist | 0123456789 |
+| Pattern | `^[0-9]{13}$` |
+
+전처리 비교에서 Otsu는 `1`을 `2`로 잘못 읽었고, CLAHE+Otsu는 아무것도 읽지 못해 Original을 선택했다.
+
+### Batch 검사 결과
+
+- 검사 이미지: 6장 (OK 4장, 교육용 NG 2장)
+- OCR Exact Accuracy: 100% (6/6)
+- Inspection Accuracy: 100% (6/6)
+- OCR Failure / Inspection Failure: 없음
+
+### 환경 변화 테스트
+
+| 조건 | OCR 결과 | 결과 |
+|---|---|---|
+| Low Contrast | `0637145699424` | 성공 |
+| Blur | 빈 값 | 실패 |
+| Tilt | `2` | 실패 |
+| Tilt + Deskew | `4` | 실패 |
+| Glare | 빈 값 | 실패 |
+
+### Mini Challenge
+
+검사 대상: Ch.-B.
+결과: (실습 후 작성)
+
+### 주요 결과 파일
+
+- configs/day06_ocr_rules.json
+- reports/day06_preprocess_compare.csv
+- reports/day06_ocr_results.csv
+- reports/day06_ocr_metrics.md
+- reports/day06_challenge_results.csv
+- reports/day06_failure_analysis.md
+
+### 오늘 확인한 핵심
+
+제품 이미지에서 필요한 문자 영역을 ROI로 선택하고,
+OCR로 읽은 문자열을 형식과 Expected Value로 검사하여 OK / NG 판정으로 연결했다.
+OCR이 정확하게 문자를 읽는 것과 제품 자체가 정상인 것은 서로 다른 문제이며,
+영상 품질이 바뀌면 정상에서 100%였던 OCR도 쉽게 실패한다는 것을 확인했다.
+
+---
